@@ -1,0 +1,5 @@
+
+Custom Message: Object reference not set to an instance of an object.
+Error Message: Object reference not set to an instance of an object.
+Stack Trace:    at MultiLanguageWebApplication.Common.ConfigSettings.ConfigSettings.get_ConnectionString() in E:\Projects\Web\Multi Language Web Application\MultiLanguageWebApplication\MultiLanguageWebApplication\Common\ConfigSettings\ConfigSettings.Connection.cs:line 11
+   at MultiLanguageWebApplication.DataAccess.MultiLanguageDA.<InsertUpdateLanguage>d__0.MoveNext() in E:\Projects\Web\Multi Language Web Application\MultiLanguageWebApplication\MultiLanguageWebApplication\DataAccess\MultiLanguageDA.cs:line 30

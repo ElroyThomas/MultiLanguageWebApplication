@@ -12,24 +12,27 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <form>
+                        <form id="frmAddLanguage">
+                            <input type="hidden" id="hdnLanguageID" />
                             <div class="row mb-3">
                                 <label for="inputText" class="col-sm-2 col-form-label">Language</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" id="txtLanguage" data-required="Language is Required">
+                                    <span class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <label for="inputText" class="col-sm-2 col-form-label">ISO Code</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" id="txtISOCode" data-required="ISO Code is Required">
+                                    <span class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label"></label>
                                 <div class="col-sm-10">
-                                    <button type="submit" class="btn btn-primary">Save</button>
-                                    <button type="submit" class="btn btn-primary">Cancel</button>
+                                    <button type="button" class="btn btn-primary" onclick="InsertLanguage();">Save</button>
+                                    <button type="button" class="btn btn-primary">Cancel</button>
                                 </div>
                             </div>
                         </form>
@@ -37,5 +40,145 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-12" id="dvProductDetails" style="margin-top:10px;">
+                <div class="card card-default">
+                    <div class="card-body">
+                        <div class="content">
+                            <div class="tab-content">
+                                <div id="Product-Details">
+                                    <table id="tblLanguage" class="table table-striped" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>Language</th>
+                                                <th>ISO Code</th>
+                                                <th>Product Name</th>
+                                                <th>Created Date</th>
+                                                <th>Modified Date</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 </main>
+
+<script type="text/javascript">
+    $("document").ready(function () {
+        ListLanguage();
+    });
+
+    function InsertLanguage() {
+        if (!ValidateForm("frmAddLanguage")) {
+            return false;
+        }
+
+        var languageID = $("#hdnLanguageID").val() || 0;
+        var language = $("#txtLanguage").val();
+        var isoCode = $("#txtISOCode").val();
+
+        $.ajax({
+            type: "GET",
+            url: "/MultiLanguage/InsertUpdateLanguage",
+            data: { languageID: languageID, language: language, isoCode: isoCode },
+            contentType: "application/json",
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+            },
+            success: function (response) {
+                if (response != null && response > 0) {
+                    alert("Saved");
+                    ClearForm('frmAddLanguage');
+                }
+                else {
+                    alert("Saving Failed");
+                }
+            },
+            error: function (err) {
+                console.log(err, 'ajax InsertLanguage error...');
+            }
+        });
+    }
+    function ListLanguage() {
+        $.ajax({
+            type: "GET",
+            url: "/MultiLanguage/SelectLanguageDetails",
+            data: { languageID: 0 },
+            contentType: "application/json",
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+            },
+            error: function (err) {
+                console.log(err, 'ajax ListLanguage error...');
+            }
+        }).done(function (res) {
+            debugger;
+            var res = response;
+            if (response != null && response.length > 0) {
+                dtTable = $('#tblLanguage').dataTable({
+                    "aaData": response,
+                    destroy: true,
+                    columnDefs: [{ orderable: false, targets: [6] }],
+                    scrollX: true,
+                    scrollCollapse: true,
+                    "columns": [
+                        {
+                            "data": "index",
+                            "name": "index",
+                            "render": function (data, type, full, meta) {
+                                return meta.row + 1;
+                            }
+                        },
+                        {
+                            "data": "Language",
+                            "name": "Language"
+                        },
+                        {
+                            "data": "ISOCode",
+                            "name": "ISO Code"
+                        },
+                        {
+                            "data": "CreatedDate",
+                            "name": "Created Date",
+                            "render": function (data) {
+                                var date = new Date(parseInt(data.replace("/Date(", "").replace(")/", ""), 10));
+                                var month = date.getMonth() + 1;
+                                return (date.getDate().toString().length > 1 ? date.getDate() : "0" + date.getDate()) + "-" + (month.toString().length > 1 ? month : "0" + month) + "-" + date.getFullYear();
+                            }
+                        },
+                        {
+                            "data": "ModifiedDate",
+                            "name": "Modified Date",
+                            "render": function (data) {
+                                var date = new Date(parseInt(data.replace("/Date(", "").replace(")/", ""), 10));
+                                var month = date.getMonth() + 1;
+                                return (date.getDate().toString().length > 1 ? date.getDate() : "0" + date.getDate()) + "-" + (month.toString().length > 1 ? month : "0" + month) + "-" + date.getFullYear();
+                            }
+                        },
+                        {
+                            mRender: function (data, type, row) {
+                                var linkEdit = "<button type='button' class='btn btn-warning btn-sm grid-button-half' onclick='EditLanguage(" + row.LanguageID + ");'>Edit</button>";
+                                var linkDelete = "<button type='button' class='btn btn-default btn-sm grid-button-half' onclick='DeleteLanguage(" + row.LanguageID + ");'>Delete</button>";
+
+                                return linkEdit + " " + linkDelete;
+                            }
+                        }
+                    ],
+                    dom: 'Bfrtip',
+                    "buttons": []
+                });
+
+                $('#tblLanguage').removeClass('display').addClass('table table-striped table-bordered');
+                $('#tblLanguage_wrapper').removeClass('form-inline');
+                $("#tblLanguage").parent().css("overflow-x", "auto");
+            }
+        });
+    }
+</script>
