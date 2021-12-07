@@ -12,7 +12,7 @@ namespace MultiLanguageWebApplication.Controllers
     public class MultiLanguageController : Controller
     {
         [Route("InsertUpdateLanguage")]
-        public async Task<JsonResult> InsertUpdateLanguage(string languageID, string language, string isoCode)
+        public async Task<JsonResult> InsertUpdateLanguage(long languageID, string language, string isoCode)
         {
             return Json(await MultiLanguageService.InsertUpdateLanguage(languageID, language, isoCode), JsonRequestBehavior.AllowGet);
         }
@@ -24,9 +24,9 @@ namespace MultiLanguageWebApplication.Controllers
         }
 
         [Route("DeleteLanguage")]
-        public async Task<JsonResult> DeleteLanguage(string languageID)
+        public async Task<JsonResult> DeleteLanguage(long languageID)
         {
-            return Json(await MultiLanguageService.DeleteLanguage(languageID));
+            return Json(await MultiLanguageService.DeleteLanguage(languageID), JsonRequestBehavior.AllowGet);
         }
 
         [Route("InsertUpdateLanguageResource")]
@@ -53,7 +53,7 @@ namespace MultiLanguageWebApplication.Controllers
         [Route("SelectLanguageResourceDetails")]
         public async Task<JsonResult> SelectLanguageResourceDetails(long resourceID)
         {
-            return Json(await MultiLanguageService.SelectLanguageResourceDetails(resourceID));
+            return Json(await MultiLanguageService.SelectLanguageResourceDetails(resourceID), JsonRequestBehavior.AllowGet);
         }
     }
 }

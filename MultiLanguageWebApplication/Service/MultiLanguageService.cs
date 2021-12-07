@@ -7,7 +7,7 @@ namespace MultiLanguageWebApplication.Service
 {
     public class MultiLanguageService
     {
-        public static async Task<long> InsertUpdateLanguage(string languageID, string language, string isoCode)
+        public static async Task<long> InsertUpdateLanguage(long languageID, string language, string isoCode)
         {
             return await MultiLanguageDA.InsertUpdateLanguage(languageID, language, isoCode);
         }
@@ -15,7 +15,7 @@ namespace MultiLanguageWebApplication.Service
         {
             return await MultiLanguageDA.SelectLanguageDetails(languageID);
         }
-        public static async Task<long> DeleteLanguage(string languageID)
+        public static async Task<long> DeleteLanguage(long languageID)
         {
             return await MultiLanguageDA.DeleteLanguage(languageID);
         }

@@ -12,7 +12,7 @@ namespace MultiLanguageWebApplication.DataAccess
 {
     public class MultiLanguageDA
     {
-        public static async Task<long> InsertUpdateLanguage(string languageID, string language, string isoCode)
+        public static async Task<long> InsertUpdateLanguage(long languageID, string language, string isoCode)
         {
             long id = 0;
 
@@ -60,7 +60,7 @@ namespace MultiLanguageWebApplication.DataAccess
 
             return result;
         }
-        public static async Task<long> DeleteLanguage(string languageID)
+        public static async Task<long> DeleteLanguage(long languageID)
         {
             long response = -1;
 

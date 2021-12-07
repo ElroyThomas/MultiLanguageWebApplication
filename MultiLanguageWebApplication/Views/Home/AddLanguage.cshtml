@@ -53,7 +53,6 @@
                                                 <th></th>
                                                 <th>Language</th>
                                                 <th>ISO Code</th>
-                                                <th>Product Name</th>
                                                 <th>Created Date</th>
                                                 <th>Modified Date</th>
                                                 <th>Action</th>
@@ -94,8 +93,9 @@
             },
             success: function (response) {
                 if (response != null && response > 0) {
-                    alert("Saved");
                     ClearForm('frmAddLanguage');
+                    ListLanguage();
+                    alert("Saved");
                 }
                 else {
                     alert("Saving Failed");
@@ -120,12 +120,12 @@
             }
         }).done(function (res) {
             debugger;
-            var res = response;
+            var response = res;
             if (response != null && response.length > 0) {
                 dtTable = $('#tblLanguage').dataTable({
                     "aaData": response,
                     destroy: true,
-                    columnDefs: [{ orderable: false, targets: [6] }],
+                    columnDefs: [{ orderable: false, targets: [5] }],
                     scrollX: true,
                     scrollCollapse: true,
                     "columns": [
@@ -164,8 +164,8 @@
                         },
                         {
                             mRender: function (data, type, row) {
-                                var linkEdit = "<button type='button' class='btn btn-warning btn-sm grid-button-half' onclick='EditLanguage(" + row.LanguageID + ");'>Edit</button>";
-                                var linkDelete = "<button type='button' class='btn btn-default btn-sm grid-button-half' onclick='DeleteLanguage(" + row.LanguageID + ");'>Delete</button>";
+                                var linkEdit = "<button type='button' class='btn btn-warning btn-sm' onclick='EditLanguage(" + row.LanguageID + ");'>Edit</button>";
+                                var linkDelete = "<button type='button' class='btn btn-danger btn-sm' onclick='DeleteLanguage(" + row.LanguageID + ");'>Delete</button>";
 
                                 return linkEdit + " " + linkDelete;
                             }
@@ -178,6 +178,48 @@
                 $('#tblLanguage').removeClass('display').addClass('table table-striped table-bordered');
                 $('#tblLanguage_wrapper').removeClass('form-inline');
                 $("#tblLanguage").parent().css("overflow-x", "auto");
+            }
+        });
+    }
+    function EditLanguage(languageID) {
+        $.ajax({
+            type: "GET",
+            url: "/MultiLanguage/SelectLanguageDetails",
+            data: { languageID: languageID },
+            contentType: "application/json",
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+            },
+            success: function (response) {
+                if (response != null && response.length > 0) {
+                    $("#hdnLanguageID").val(response[0].LanguageID);
+                    $("#txtLanguage").val(response[0].Language);
+                    $("#txtISOCode").val(response[0].ISOCode);
+                }
+            },
+            error: function (err) {
+                console.log(err, 'ajax EditLanguage error...');
+            }
+        });
+    }
+    function DeleteLanguage(languageID) {
+        if (!confirm("Are you sure you want to delete?")) {
+            return false;
+        }
+        $.ajax({
+            type: "GET",
+            url: "/MultiLanguage/DeleteLanguage",
+            data: { languageID: languageID },
+            contentType: "application/json",
+            success: function (response) {
+                if (response != null && response > 0) {
+                    ClearForm('frmAddLanguage');
+                    ListLanguage();
+                    alert("Deleted");
+                }
+            },
+            error: function (err) {
+                console.log(err, 'ajax DeleteLanguage error...');
             }
         });
     }
