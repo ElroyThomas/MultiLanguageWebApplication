@@ -17,5 +17,16 @@ namespace MultiLanguageWebApplication
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
+
+        public void Application_Error(object sender, EventArgs e)
+        {
+            try
+            {
+                Exception ex = Server.GetLastError();
+            }
+            catch(Exception err)
+            {
+            }
+        }
     }
 }
